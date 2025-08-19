@@ -33,7 +33,7 @@ VCD-300-GAME est une simulation web authentique d'une console de jeux rétro fic
 
 | 🏠 Écran d'accueil | 🎮 Menu des jeux | 🕹️ En jeu |
 |:---:|:---:|:---:|
-| ![Intro](https://via.placeholder.com/250x150/001122/00ffff?text=Intro+Screen) | ![Menu](https://via.placeholder.com/250x150/002244/ffff00?text=Game+Menu) | ![Gaming](https://via.placeholder.com/250x150/000000/ff0066?text=Gaming) |
+| ![Intro](/screenshots/intro.png) | ![Menu](/screenshots/gamemenu.png) | ![Gaming](/screenshots/gaming.png) |
 
 </div>
 
@@ -210,8 +210,8 @@ Si ce projet vous plaît :
 ### 📞 Contact
 
 - **GitHub** : [@filinodz](https://github.com/filinodz)
-- **Email** : [Votre email]
-- **Website** : [Votre site web]
+- **Email** : filinodz@gmail.com
+- **Website** : filinodz.pro
 
 ---
 
