@@ -11,7 +11,7 @@
 
 *Plongez dans une collection de 300 jeux classiques avec une interface fidèle aux consoles des années 2000*
 
-[🚀 Démo Live](#) • [📖 Documentation](#installation) • [🐛 Issues](https://github.com/filinodz/vcd-300-game/issues) • [⭐ Star ce projet](https://github.com/filinodz/vcd-300-game)
+[🚀 Démo Live](https://vcd.gamer.gd) • [📖 Documentation](#installation) • [🐛 Issues](https://github.com/filinodz/vcd-300-game/issues) • [⭐ Star ce projet](https://github.com/filinodz/vcd-300-game)
 
 </div>
 
@@ -74,32 +74,83 @@ VCD-300-GAME est une simulation web authentique d'une console de jeux rétro fic
 - **PHP 7.4+** 
 - **Navigateur moderne** avec support WebAssembly
 
-### Installation rapide
+### Installation complète
 
+#### 1️⃣ Cloner le projet principal
 ```bash
-# Cloner le repository
+# Cloner le repository VCD-300-GAME
 git clone https://github.com/filinodz/vcd-300-game.git
-
-# Aller dans le dossier
 cd vcd-300-game
+```
 
+#### 2️⃣ Installer EmulatorJS
+```bash
+# Cloner EmulatorJS dans le dossier du projet
+git clone https://github.com/EmulatorJS/EmulatorJS.git emulatorjs
+
+# Ou télécharger directement depuis GitHub
+# https://github.com/EmulatorJS/EmulatorJS/archive/refs/heads/main.zip
+# Et extraire dans le dossier 'emulatorjs/'
+```
+
+#### 3️⃣ Ajouter les ROMs
+```bash
+# Créer le dossier roms si nécessaire
+mkdir -p emulatorjs/roms/nes
+
+# Télécharger le fichier roms.zip depuis les releases du projet
+# https://github.com/filinodz/vcd-300-game/releases
+
+# Extraire les ROMs dans le bon dossier
+unzip roms.zip -d emulatorjs/roms/nes/
+```
+
+#### 4️⃣ Lancement
+```bash
 # Si vous utilisez un serveur local PHP
 php -S localhost:8000
 
 # Ou déployez directement sur votre serveur web
 ```
 
-### Structure du projet
+### 📁 Structure finale du projet
 
 ```
 vcd-300-game/
-├── 📁 emulatorjs/           # Moteur d'émulation
+├── 📁 emulatorjs/           # ← À installer séparément
 │   ├── 📁 data/            # Données EmulatorJS
-│   └── 📁 roms/            # ROMs des jeux NES
+│   ├── 📁 roms/            # ← ROMs à ajouter
+│   │   └── 📁 nes/         # ROMs NES (300 jeux)
+│   ├── 📄 loader.js        # Loader EmulatorJS
+│   └── 📄 ...              # Autres fichiers EmulatorJS
 ├── 📁 img/                 # Images et backgrounds
 ├── 📄 index.php            # Interface principale
 ├── 📄 README.md            # Documentation
+├── 📄 roms.zip             # ← Archive des ROMs (releases)
 └── 📄 .gitignore          # Fichiers ignorés
+```
+
+### ⚠️ Notes importantes
+
+#### **EmulatorJS**
+- **Non inclus** dans le repository principal (taille importante)
+- **Installation requise** depuis le [repository officiel](https://github.com/EmulatorJS/EmulatorJS)
+- **Version recommandée** : Latest stable release
+
+#### **ROMs**
+- **Non incluses** dans le repository principal (droits d'auteur)
+- **Disponibles** dans les [Releases](https://github.com/filinodz/vcd-300-game/releases) du projet
+- **300 jeux NES** dans l'archive `roms.zip`
+- **Extraction requise** dans `emulatorjs/roms/nes/`
+
+#### **Alternative rapide**
+Si vous voulez tout installer d'un coup :
+
+```bash
+# Script d'installation automatique (Linux/Mac)
+curl -sSL https://raw.githubusercontent.com/filinodz/vcd-300-game/main/install.sh | bash
+
+# Ou téléchargez install.bat pour Windows
 ```
 
 ---
@@ -123,7 +174,7 @@ vcd-300-game/
 
 ### Ajouter des jeux
 
-Modifiez le tableau `$GAMES` dans `index.php` :
+Pour ajouter d'autres jeux, modifiez le tableau `$GAMES` dans `index.php` :
 
 ```php
 $GAMES = [
@@ -136,12 +187,59 @@ $GAMES = [
 ];
 ```
 
+**Important** : Assurez-vous que le fichier ROM existe dans `emulatorjs/roms/nes/`
+
+### Dépannage courant
+
+#### ❌ **EmulatorJS ne se charge pas**
+```bash
+# Vérifier que EmulatorJS est bien installé
+ls -la emulatorjs/
+# Doit contenir: data/, loader.js, etc.
+
+# Réinstaller si nécessaire
+rm -rf emulatorjs/
+git clone https://github.com/EmulatorJS/EmulatorJS.git emulatorjs
+```
+
+#### ❌ **Jeux ne se lancent pas**
+```bash
+# Vérifier que les ROMs sont présentes
+ls -la emulatorjs/roms/nes/
+# Doit contenir: 1-1942.nes, 2-1943.nes, etc.
+
+# Extraire les ROMs si nécessaire
+unzip roms.zip -d emulatorjs/roms/nes/
+```
+
+#### ❌ **Erreur 404 sur les ROMs**
+- Vérifiez les **permissions** des fichiers
+- Assurez-vous que le **serveur web** peut lire les fichiers
+- Vérifiez les **chemins** dans le tableau `$GAMES`
+
 ### Personnaliser l'interface
 
 - **Couleurs** : Modifiez les variables CSS dans la section `<style>`
 - **Fonts** : Changez les imports Google Fonts
 - **Animations** : Ajustez les keyframes CSS
 - **Backgrounds** : Remplacez les images dans `/img/`
+
+### Optimisations serveur
+
+Pour de meilleures performances :
+
+```apache
+# .htaccess (Apache)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/css "access plus 1 month"
+</IfModule>
+```
 
 ---
 
@@ -193,7 +291,7 @@ Les contributions sont les bienvenues ! Voici comment participer :
 Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ```
-MIT License - Copyright (c) 2024 FilinoDZ
+MIT License - Copyright (c) 2025 FilinoDZ
 ```
 
 ---
@@ -210,8 +308,7 @@ Si ce projet vous plaît :
 ### 📞 Contact
 
 - **GitHub** : [@filinodz](https://github.com/filinodz)
-- **Email** : filinodz@gmail.com
-- **Website** : filinodz.pro
+- **Email** : [filinodz@gmail.com]
 
 ---
 
